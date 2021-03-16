@@ -14,23 +14,19 @@ def listToString(lines):
 
 
 def parseResponse(response):
-    lines = response.split('\n')
+    lines = response.split('\r\n')
     headers = []
     body = []
 
-    isHeader = True
-    for line in lines:
-        if line == '\n':
-            isHeader = False
-            continue
-
-        if isHeader:
-            headers.append(line)
-        else:
-            b
+    split = lines.index('')
+    headers = lines[: split]
+    body = lines[split + 1:]
 
     keywords = headers[0].split(' ')
-    keywords[0] ==
+    if keywords[1] == '200':
+        return headers, body
+    else:
+        return [], []
 
 
 def sendAndReceiveResponse(socket, request):
@@ -44,11 +40,9 @@ def executePartA(socket):
     req = 'GET / HTTP/1.1\r\n'
     req += 'Host: localhost:8000\r\n\r\n'
 
-    data = sendAndReceiveResponse(socket, req)
-    lines = data.split('\n')
-    lines = lines[2:]
+    headers, body = sendAndReceiveResponse(socket, req)
 
-    data = listToString(lines)
+    data = listToString(body)
     with open('index2.html', 'w') as f:
         f.write(data)
 
