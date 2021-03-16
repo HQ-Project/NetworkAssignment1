@@ -100,19 +100,4 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     executePartB(s, hiddenLink, False)
     executePartB(s, hiddenLink, True)
 
-    # req = 'GET /protected.html HTTP/1.1\r\n'
-    # req += 'Host: localhost:8000 \r\n\r\n'
-
-    # s.sendall(bytes(req, 'utf-8'))
-    # data = s.recv(1024)
-
-    # data = data.decode('utf-8')
-    # print(data)
-
-    # lines = data.split('\n')
-    # lines = lines[2:]
-
-    # data = listToString(lines)
-    # print(data)
-
     exitProgram(s)
