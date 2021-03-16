@@ -28,7 +28,7 @@ print('Listening on port %s ...' % SERVER_PORT)
 server_buffer = Queue()
 
 # Define the page properties
-openaccpages = ['/index.html', '/big.txt']
+openaccpages = ['/index.html']
 closeaccpages = ['/protected.html']
 downloadable = ['/big.txt']
 
@@ -94,7 +94,7 @@ def responseGET(headers, client):
                 rng = [int(rng[0]), int(rng[1])]
                 maxRng = getFileLength(filename)
                 # check if in range
-                if rng[1] >= maxRng or rng[0] >= rng[1]:
+                if rng[1] > maxRng or rng[0] >= rng[1]:
                     response = 'HTTP/1.1 416 Requested Range Not Satisfiable\r\n\r\n'
                     client.sendall(response.encode())
                 else:
