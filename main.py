@@ -64,6 +64,7 @@ def sendAndReceiveResponse(socket, request, my_bytes=1024):
 
 
 def executePartA(socket):
+    print('Executing part A')
     req = 'GET / HTTP/1.1\r\n'
     req += 'Host: localhost:8000\r\n\r\n'
 
@@ -72,11 +73,13 @@ def executePartA(socket):
     data = listToString(response.body)
     writeToFile('index2.html', data)
 
-    link = re.findall('\".*html\"', data)[0][1:-1]
+    link = re.findall('href\=\".*\">', data)[0][6:-2]
+    print('Finished executing part A, hidden link is: {}'.format('/' + link))
     return '/' + link
 
 
 def executePartB(socket, link, authorization=False):
+    print('Executing part B')
     req = 'GET {} HTTP/1.1\r\n'.format(link)
     req += 'Host: localhost:8000\r\n'
     if authorization:
@@ -89,11 +92,12 @@ def executePartB(socket, link, authorization=False):
     response = sendAndReceiveResponse(socket, req)
 
     if response.statusCode == 401:
-        print('Authentication failed')
+        print('Authentication failed in part B')
     elif response.statusCode == 200:
         writeToFile('protected2.html', listToString(response.body))
         link = re.findall(
             'href\=\".*\">', listToString(response.body))[0][6:-2]
+        print('Finished executing part B, hidden link is: {}'.format('/' + link))
         return '/' + link
 
     return None
@@ -124,6 +128,7 @@ def executePartC(socket, link, current_range):
         prev += current_range
 
     end_time = time.time()
+    print("Total time in seconds:")
     print(end_time - start_time)
 
     writeToFile('test.txt', message)
@@ -147,11 +152,10 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     s.connect((SERVER_HOST, SERVER_PORT))
 
     hiddenLink = executePartA(s)
-    print(hiddenLink)
 
     executePartB(s, hiddenLink, False)
     hiddenLink = executePartB(s, hiddenLink, True)
 
-    executePartC(s, hiddenLink, 1000)
+    executePartC(s, hiddenLink, 100)
 
     exitProgram(s)
